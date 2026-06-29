@@ -886,3 +886,86 @@ html, body {
   .followup-chip { font-size: 11px; padding: 5px 11px; }
   .bubble { font-size: 13px; }
 }
+
+/* ── Feedback row ── */
+.feedback-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.feedback-label {
+  font-size: 11px;
+  color: var(--text-ter);
+  flex: 1;
+}
+.feedback-btn {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border-med);
+  background: transparent;
+  color: var(--text-sec);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.feedback-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: var(--teal-dim);
+}
+.feedback-btn:disabled { opacity: 0.4; cursor: default; }
+.feedback-thanks {
+  font-size: 11px;
+  color: var(--teal);
+  opacity: 0.75;
+}
+
+/* ── How it works ── */
+.how-it-works {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 560px;
+  width: 100%;
+  padding: 16px 0 4px;
+}
+.hiw-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 7px 14px;
+}
+.hiw-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--teal-dim);
+  border: 1px solid rgba(0,245,212,0.25);
+  color: var(--teal);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hiw-text {
+  font-size: 11px;
+  color: var(--text-sec);
+  white-space: nowrap;
+}
+.hiw-divider {
+  color: var(--text-ter);
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .how-it-works { display: none; }
+}

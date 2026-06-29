@@ -415,6 +415,10 @@ async function submitMessage(text) {
     } else {
       bubble.innerHTML = renderMd(cleanText);
     }
+
+    // Add feedback buttons below the message
+    const feedbackEl = buildFeedback(data, cleanText);
+    msgBody.appendChild(feedbackEl);
     scrollDown();
 
   } catch (err) {
@@ -524,6 +528,50 @@ function buildChips(chips) {
     btn.addEventListener('click', () => { if (!streaming) submitMessage(chipText); });
     wrap.appendChild(btn);
   });
+  return wrap;
+}
+
+function buildFeedback(data, messageText) {
+  const wrap = document.createElement('div');
+  wrap.className = 'feedback-row';
+
+  const label = document.createElement('span');
+  label.className = 'feedback-label';
+  label.textContent = 'Was this helpful?';
+
+  const thumbUp = document.createElement('button');
+  thumbUp.className = 'feedback-btn';
+  thumbUp.textContent = 'Yes';
+  thumbUp.setAttribute('aria-label', 'Helpful');
+
+  const thumbDown = document.createElement('button');
+  thumbDown.className = 'feedback-btn';
+  thumbDown.textContent = 'No';
+  thumbDown.setAttribute('aria-label', 'Not helpful');
+
+  function sendFeedback(helpful) {
+    thumbUp.disabled   = true;
+    thumbDown.disabled = true;
+    wrap.innerHTML = '<span class="feedback-thanks">Thanks for the feedback.</span>';
+
+    fetch('/api/feedback', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        helpful,
+        product:          data?.product || '',
+        verdict:          data?.verdict || '',
+        message_preview:  messageText.slice(0, 120),
+      }),
+    }).catch(() => {});
+  }
+
+  thumbUp.addEventListener('click',   () => sendFeedback(true));
+  thumbDown.addEventListener('click', () => sendFeedback(false));
+
+  wrap.appendChild(label);
+  wrap.appendChild(thumbUp);
+  wrap.appendChild(thumbDown);
   return wrap;
 }
 
