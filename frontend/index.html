@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuyRight AI — Shop Smarter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css?v=8" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ── Top Navigation ── -->
+    <header class="topbar" role="banner">
+      <div class="topbar-brand">
+        <div class="brand-mark" aria-hidden="true">
+          <div class="brand-ring"></div>
+          <div class="brand-core"></div>
+        </div>
+        <span class="brand-name">BuyRight<span class="brand-accent">AI</span></span>
+      </div>
+
+      <div class="topbar-center">
+        <div class="agent-pill" role="status" aria-live="polite">
+          <span class="agent-pulse" aria-hidden="true"></span>
+          <span id="agent-count-label">Watching 3 items for you</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="model-tag" aria-label="Powered by Claude Sonnet 4.6">Sonnet 4.6</span>
+        <button class="btn-ghost" id="clear-btn" aria-label="Start new session">New Session</button>
+      </div>
+    </header>
+
+    <!-- ── Workspace ── -->
+    <div class="workspace" role="main">
+
+      <!-- Left Rail: Session Products -->
+      <aside class="rail rail-left" aria-label="This session">
+        <p class="rail-label">This Session</p>
+        <div class="session-empty" id="session-empty">
+          <p class="session-empty-text">Products you ask about will appear here.</p>
+        </div>
+        <div id="session-cards"></div>
+      </aside>
+
+      <!-- Center Stage -->
+      <main class="center-stage" aria-label="Main interface">
+
+        <!-- Hero -->
+        <div class="hero" id="hero">
+          <p class="hero-eyebrow">BuyRight AI</p>
+          <h1 class="hero-title">Buy smarter.<br><span class="title-teal">Pay less.</span></h1>
+          <p class="hero-sub">Tell me what you're shopping for. I'll give you a real verdict — buy now, wait, or negotiate — with the reasoning behind it.</p>
+
+          <div class="omnibar-wrap">
+            <label class="sr-only" for="hero-input">Tell the agent what to buy</label>
+            <div class="omnibar-box" id="omnibar-box">
+              <textarea
+                id="hero-input"
+                class="omnibar-input"
+                placeholder='e.g. "Watch iPhone 16 Pro and buy it when it drops below $900"'
+                rows="1"
+                aria-label="Shopping instruction"
+              ></textarea>
+              <div class="omnibar-controls">
+                <button class="icon-btn" aria-label="Attach image or link" tabindex="0">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Voice input" tabindex="0">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+                <button class="send-btn" id="hero-send" disabled aria-label="Send message">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capability pills -->
+          <nav class="cap-nav" aria-label="What do you need help with?">
+            <button class="cap-pill active" data-feature="general"            data-ph='e.g. "Find me the best deal on a standing desk under $300"'>Everything</button>
+            <button class="cap-pill"         data-feature="price_intelligence" data-ph='e.g. "Is now a good time to buy a Sony WH-1000XM5?"'>Is this a good price?</button>
+            <button class="cap-pill"         data-feature="monitor"            data-ph='e.g. "Buy the MacBook Air M3 for me when it drops under $999"'>Buy it for me</button>
+            <button class="cap-pill"         data-feature="negotiate"          data-ph='e.g. "Try to get a lower price on the LG C3 65-inch OLED at Best Buy"'>Get me a discount</button>
+            <button class="cap-pill"         data-feature="collective"         data-ph='e.g. "Can we get a group deal on the Dyson V15?"'>Buy as a group</button>
+            <button class="cap-pill"         data-feature="life_event"         data-ph='e.g. "I\'m moving to Austin on Aug 15 — what should I buy and when?"'>I\'m planning something</button>
+            <button class="cap-pill"         data-feature="procurement"        data-ph='e.g. "I need a college laptop for $800–$1000 by August — handle everything"'>Handle the whole purchase</button>
+            <button class="cap-pill"         data-feature="fulfillment"        data-ph='e.g. "Track my Amazon and Best Buy orders and get me money back if the price drops"'>After I buy</button>
+          </nav>
+
+          <!-- Quick suggestions -->
+          <div class="suggestions-grid" role="list">
+            <button class="suggestion-card" role="listitem" data-feature="price_intelligence" data-msg="Is now a good time to buy the Sony WH-1000XM5? I need them in 3 weeks and my budget is $300.">
+              <span class="sug-label">Is this a good price?</span>
+              <span class="sug-desc">Should I buy the Sony WH-1000XM5 now or wait?</span>
+            </button>
+            <button class="suggestion-card" role="listitem" data-feature="negotiate" data-msg="Negotiate the price on a $1,200 LG C3 65-inch OLED TV at Best Buy. Run your full negotiation strategy.">
+              <span class="sug-label">Get me a discount</span>
+              <span class="sug-desc">LG OLED TV at Best Buy — can you get a lower price?</span>
+            </button>
+            <button class="suggestion-card" role="listitem" data-feature="life_event" data-msg="I have a calendar entry: Move to Austin on August 15. What should I proactively buy, and when is the optimal time for each item?">
+              <span class="sug-label">I'm planning something</span>
+              <span class="sug-desc">I'm moving to Austin on Aug 15 — what should I buy?</span>
+            </button>
+            <button class="suggestion-card" role="listitem" data-feature="procurement" data-msg="I need a laptop for my daughter starting college in August. Budget $800 to $1000. Research options, negotiate, and execute the purchase.">
+              <span class="sug-label">Handle the whole purchase</span>
+              <span class="sug-desc">Get my daughter a college laptop, $800–$1000, by August</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat messages -->
+        <div class="messages hidden" id="messages" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+        <!-- Chat input bar -->
+        <div class="chat-bar hidden" id="chat-bar">
+          <nav class="cap-nav cap-nav-sm" id="cap-nav-chat" aria-label="What do you need help with?">
+            <button class="cap-pill active" data-feature="general"            data-ph='e.g. "Find me the best deal on a standing desk under $300"'>Everything</button>
+            <button class="cap-pill"         data-feature="price_intelligence" data-ph='e.g. "Is now a good time to buy a Sony WH-1000XM5?"'>Good price?</button>
+            <button class="cap-pill"         data-feature="monitor"            data-ph='e.g. "Buy the MacBook Air M3 for me when it drops under $999"'>Buy for me</button>
+            <button class="cap-pill"         data-feature="negotiate"          data-ph='e.g. "Try to get a lower price on the LG C3 65-inch OLED at Best Buy"'>Get discount</button>
+            <button class="cap-pill"         data-feature="collective"         data-ph='e.g. "Can we get a group deal on the Dyson V15?"'>Group buy</button>
+            <button class="cap-pill"         data-feature="life_event"         data-ph='e.g. "I\'m moving to Austin on Aug 15 — what should I buy?"'>Life event</button>
+            <button class="cap-pill"         data-feature="procurement"        data-ph='e.g. "I need a college laptop for $800–$1000 by August — handle everything"'>Full purchase</button>
+            <button class="cap-pill"         data-feature="fulfillment"        data-ph='e.g. "Track my orders and get me money back if the price drops"'>After I buy</button>
+          </nav>
+          <div class="chat-input-row">
+            <label class="sr-only" for="chat-input">Follow-up message</label>
+            <div class="chat-input-box" id="chat-input-box">
+              <textarea id="chat-input" placeholder="Ask anything..." rows="1" aria-label="Follow-up message"></textarea>
+              <button class="send-btn" id="chat-send" disabled aria-label="Send message">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="disclaimer" role="note">Results are AI-generated. Always double-check before buying.</p>
+        </div>
+      </main>
+
+      <!-- Right Rail: Live Verdict -->
+      <aside class="rail rail-right" aria-label="Price Outlook">
+        <p class="rail-label">Price Outlook</p>
+
+        <!-- Verdict card — always visible -->
+        <div class="hub-card verdict-card" id="verdict-card">
+          <p class="hub-card-label">Our Verdict</p>
+          <div id="verdict-empty-state">
+            <p class="verdict-empty-msg">Ask about a product to see a recommendation here.</p>
+          </div>
+          <div id="verdict-data-state" class="hidden">
+            <div class="verdict-badge-wrap">
+              <span class="verdict-badge" id="verdict-badge"></span>
+              <button class="copy-verdict-btn" id="copy-verdict-btn" title="Copy recommendation">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+            <p class="verdict-product-name" id="verdict-product"></p>
+            <div class="verdict-rows">
+              <div class="verdict-row" id="vrow-price">
+                <span class="vrow-label">Price range</span>
+                <span class="vrow-val" id="vrow-price-val"></span>
+              </div>
+              <div class="verdict-row" id="vrow-store">
+                <span class="vrow-label">Best price at</span>
+                <span class="vrow-val" id="vrow-store-val"></span>
+              </div>
+              <div class="verdict-row" id="vrow-timeline">
+                <span class="vrow-label">Wait time</span>
+                <span class="vrow-val" id="vrow-timeline-val"></span>
+              </div>
+              <div class="verdict-row" id="vrow-conf">
+                <span class="vrow-label">Confidence</span>
+                <span class="vrow-val" id="vrow-conf-val"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Capability description — shown when pill selected, hidden when data active -->
+        <div class="hub-capability hidden" id="hub-capability">
+          <p class="hub-cap-label" id="hub-cap-label"></p>
+          <p class="hub-cap-desc" id="hub-cap-desc"></p>
+          <p class="hub-cap-hint" id="hub-cap-hint"></p>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=8"></script>
+</body>
+</html>

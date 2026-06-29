@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "buyrightai",
+      "runtimeExecutable": "uvicorn",
+      "runtimeArgs": ["main:app", "--reload", "--port", "8000"],
+      "port": 8000,
+      "cwd": "C:\\Users\\ahada\\OneDrive\\Desktop\\Claude Code\\buyrightai"
+    }
+  ]
+}
